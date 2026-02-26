@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 이력서 - DevMatch</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/}">
+                <i class="bi bi-code-slash me-2"></i>DevMatch
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/jobs}">채용공고</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/resumes}">인재풀</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span sec:authentication="principal.name">사용자</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{/dashboard}">대시보드</a></li>
+                            <li><a class="dropdown-item" th:href="@{/resumes/my}">내 이력서</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/auth/logout}" method="post">
+                                    <button type="submit" class="dropdown-item">로그아웃</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 -->
+    <main class="container py-4">
+        <!-- 알림 메시지 -->
+        <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show">
+            <span th:text="${successMsg}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show">
+            <span th:text="${errorMsg}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-file-earmark-person me-2"></i>내 이력서</h2>
+            <a th:href="@{/resumes/new}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>새 이력서 작성
+            </a>
+        </div>
+
+        <!-- 이력서 목록 -->
+        <div class="row g-4">
+            <div class="col-md-6" th:each="resume : ${resumes}">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">
+                                <a th:href="@{/resumes/view/{id}(id=${resume.resumeId})}" 
+                                   class="text-decoration-none text-dark"
+                                   th:text="${resume.title}">이력서 제목</a>
+                            </h5>
+                            <span th:if="${resume.isPublic == 'Y'}" class="badge bg-success">공개</span>
+                            <span th:if="${resume.isPublic == 'N'}" class="badge bg-secondary">비공개</span>
+                        </div>
+                        
+                        <!-- 기술스택 -->
+                        <div class="mb-3" th:if="${resume.skills}">
+                            <span th:each="skill : ${#strings.arraySplit(resume.skills, ',')}"
+                                  class="badge bg-primary bg-opacity-10 text-primary me-1"
+                                  th:text="${#strings.trim(skill)}">Java</span>
+                        </div>
+                        
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-eye me-1"></i><span th:text="${resume.viewCount}">0</span>회 조회
+                            <span class="mx-2">|</span>
+                            <i class="bi bi-calendar me-1"></i>
+                            <span th:text="${#temporals.format(resume.updatedAt, 'yyyy-MM-dd')}">2025-01-01</span>
+                        </p>
+                        
+                        <!-- 버튼 -->
+                        <div class="d-flex gap-2">
+                            <a th:href="@{/resumes/edit/{id}(id=${resume.resumeId})}" 
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil me-1"></i>수정
+                            </a>
+                            <form th:action="@{/resumes/delete/{id}(id=${resume.resumeId})}" 
+                                  method="post" class="d-inline"
+                                  onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash me-1"></i>삭제
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 데이터 없음 -->
+            <div class="col-12" th:if="${#lists.isEmpty(resumes)}">
+                <div class="text-center py-5">
+                    <i class="bi bi-file-earmark-plus text-muted display-1"></i>
+                    <p class="text-muted mt-3">등록된 이력서가 없습니다.</p>
+                    <a th:href="@{/resumes/new}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i>첫 이력서 작성하기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2025 DevMatch. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

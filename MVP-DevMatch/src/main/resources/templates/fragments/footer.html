@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Footer - Full -->
+<footer th:fragment="footer" class="footer">
+    <div class="footer__inner">
+        <div class="footer__top">
+            <div class="footer__brand">
+                <a th:href="@{/}" class="footer__logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                    DevMatch
+                </a>
+                <p class="footer__desc">
+                    검증된 개발자와 의뢰인을 연결하는 신뢰할 수 있는 매칭 플랫폼입니다.
+                </p>
+            </div>
+            
+            <div class="footer__section">
+                <h4 class="footer__title">서비스</h4>
+                <div class="footer__links">
+                    <a th:href="@{/jobs}" class="footer__link">채용공고</a>
+                    <a th:href="@{/resumes}" class="footer__link">인재풀</a>
+                </div>
+            </div>
+            
+            <div class="footer__section">
+                <h4 class="footer__title">지원</h4>
+                <div class="footer__links">
+                    <a href="#" class="footer__link">FAQ</a>
+                    <a href="#" class="footer__link">문의하기</a>
+                </div>
+            </div>
+            
+            <div class="footer__section">
+                <h4 class="footer__title">법적 고지</h4>
+                <div class="footer__links">
+                    <a th:href="@{/legal/terms}" class="footer__link">이용약관</a>
+                    <a th:href="@{/legal/privacy}" class="footer__link">개인정보처리방침</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer__bottom">
+            <p class="footer__copyright">© 2025 DevMatch. All rights reserved.</p>
+            <div class="footer__legal">
+                <a th:href="@{/legal/terms}" class="footer__legal-link">이용약관</a>
+                <a th:href="@{/legal/privacy}" class="footer__legal-link">개인정보처리방침</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Footer - Simple -->
+<footer th:fragment="footer-simple" class="footer footer--simple">
+    <div class="footer__inner">
+        <p class="footer__copyright">© 2025 DevMatch. All rights reserved.</p>
+        <div class="footer__legal">
+            <a th:href="@{/legal/terms}" class="footer__legal-link">이용약관</a>
+            <a th:href="@{/legal/privacy}" class="footer__legal-link">개인정보처리방침</a>
+        </div>
+    </div>
+</footer>
+
+</html>

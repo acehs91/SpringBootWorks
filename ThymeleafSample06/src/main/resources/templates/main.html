@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: base(~{::title}, ~{::section})}">
+<!--
+    th:replace="~{layout :: base(~{::title}, ~{::section})}"
+    layout.html의 base 틀 가져와서, 내(main) title이랑 section 끼워넣어줘
+-->
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf Sample</title>
+</head>
+<body>
+<section>
+    <!-- 01: 직접 문자 삽입 방법 -->
+    <h3>01: 직접 문자 삽입</h3>
+    <h2 th:text="'hello world'">표시할 부분</h2>
+    <br>
+    
+    <!-- 02: 인라인 처리 방법 -->
+    <h3>02: 인라인 처리</h3>
+    <h2>[[${name}]] 님 안녕하세요~</h2>
+    <br>
+    
+    <!-- 03: 값 결합 -->
+    <h3>03: 값 결합 (+)</h3>
+    <h2 th:text="'내일은' + '맑음' + '입니다.'">표시할 부분</h2>
+    <br>
+    
+    <!-- 04: 값 결합 (리터럴 치환) -->
+    <h3>04: 값 결합 (리터럴 치환 |...|)</h3>
+    <h2 th:text="|${name}님, 안녕하세요~|">표시할 부분</h2>
+    <br>
+    
+    <!-- 05: 지역 변수 -->
+    <h3>05: 지역 변수 (th:with)</h3>
+    <div th:with="a=1, b=2">
+        <span th:text="|${a} + ${b} = ${a+b}|"></span>
+    </div>
+    <br>
+    
+    <!-- 06: 비교/등호 연산자 -->
+    <h3>06: 비교/등호 연산자</h3>
+    <span th:text="1 > 10">gt</span> /
+    <span th:text="1 < 10">lt</span> /
+    <span th:text="1 >= 10">ge</span> /
+    <span th:text="1 <= 10">le</span> /
+    <span th:text="1 == 10">eq</span> /
+    <span th:text="1 != 10">ne</span>
+    <br>
+    <span th:text="'재돌' == '재돌'">문자비교</span> /
+    <span th:text="'재돌' != '재돌'">문자비교</span>
+    <br><br>
+    
+    <!-- 07: 조건 연산자 (삼항) -->
+    <h3>07: 삼항 연산자</h3>
+    <p th:text="${name} == '현수' ? '현수 맞음!' : '현수 아님!'">결과</p>
+    <br>
+    
+    <!-- 08: 조건식 if -->
+    <h3>08: 조건식 (th:if)</h3>
+    <th:block th:if="${name} == '현수'">
+        <p>현수입니다!</p>
+    </th:block>
+    <br>
+    
+    <!-- 09: 조건식 unless -->
+    <h3>09: 조건식 (th:unless)</h3>
+    <div th:unless="${name} == '둘균'">
+        <p>둘균이가 아닙니다.</p>
+    </div>
+    <br>
+    
+    <!-- 10: Elvis 연산자 -->
+    <h3>10: Elvis 연산자 (?:)</h3>
+    <p th:text="${nickname} ?: '닉네임 없음'">닉네임</p>
+    <br>
+    
+    <!-- 11: switch -->
+    <h3>11: switch / case</h3>
+    <div th:switch="${name}">
+        <p th:case="'영희'" th:text="|${name}입니다!!|"></p>
+        <p th:case="'성자'" th:text="|${name}입니다!!|"></p>
+        <p th:case="*">명단에 없습니다</p>
+    </div>
+    <br>
+    
+    <!-- 12: 인스턴스(참조) = 객체 접근 (.으로) -->
+    <h3>12: 객체 접근 (.으로)</h3>
+    <span th:text="${member.id}">ID</span> - <span th:text="${member.name}">이름</span>
+    <br><br>
+    
+    <!-- 13: 인스턴스(참조) = 객체 접근 ([]으로) -->
+    <h3>13: 객체 접근 ([]으로)</h3>
+    <span th:text="${member['id']}">ID</span> - <span th:text="${member['name']}">이름</span>
+    <br><br>
+    
+    <!-- 14: 인스턴스(참조) th:object 사용 -->
+    <h3>14: th:object + *{필드}</h3>
+    <th:block th:object="${member}">
+        <span th:text="*{id}">ID</span> - <span th:text="*{name}">이름</span><br>
+        <span th:text="*{['id']}">ID</span> - <span th:text="*{['name']}">이름</span>
+    </th:block>
+    <br><br>
+
+    <!-- 15: 인스턴스(List) -->
+    <h3>15: 인스턴스 (List)</h3>
+    <span th:text="${directionList[0]}">방향1</span> - 
+    <span th:text="${directionList[1]}">방향2</span> - 
+    <span th:text="${directionList[2]}">방향3</span> - 
+    <span th:text="${directionList[3]}">방향4</span>
+    <br><br>
+
+    <!-- 16: 인스턴스(Map) -->
+    <h3>16: 인스턴스 (Map)</h3>
+    .으로 접근 : <span th:text="${memberMap.minsoo.name}">이름1</span> - 
+    <span th:text="${memberMap.jiyoung.name}">이름2</span><br>
+    []으로 접근 : <span th:text="${memberMap['minsoo']['name']}">이름1</span> - 
+    <span th:text="${memberMap['jiyoung']['name']}">이름2</span>
+    <br><br>
+
+    <!-- 17: 반복 -->
+    <h3>17: 반복 (th:each)</h3>
+    <div th:each="member : ${members}">
+        <p>[[${member.id}]] : [[${member.name}]]</p>
+    </div>
+    <br>
+
+    <!-- 18: 반복 상태 -->
+    <h3>18: 반복 상태</h3>
+    <div th:each="member, s : ${members}" th:object="${member}">
+        index-> [[${s.index}]], count-> [[${s.count}]]
+        size-> [[${s.size}]], current-> [[${s.current}]]
+        even-> [[${s.even}]], odd-> [[${s.odd}]]
+        first-> [[${s.first}]], last-> [[${s.last}]]
+        [[*{id}]] : [[*{name}]]
+    </div>
+    <br>
+
+    <!-- 19: 유틸리티 객체 - 숫자 -->
+    <h3>19: 유틸리티 - 숫자</h3>
+    <div th:with="x=1000000, y=123456.789">
+        정수 형식 : <span th:text="${#numbers.formatInteger(x, 3, 'COMMA')}">숫자</span><br>
+        부동 소수점 형식 : <span th:text="${#numbers.formatDecimal(y, 3, 'COMMA', 2, 'POINT')}">숫자</span>
+    </div>
+    <br>
+    
+    <!-- 20: 유틸리티 - 날짜 -->
+    <h3>20: 유틸리티 - 날짜</h3>
+    <div th:with="today=${#dates.createNow()}">
+        yyyy/MM/dd 형식 : <span th:text="${#dates.format(today, 'yyyy/MM/dd')}">날짜</span><br>
+        yyyy년 MM월 dd일 형식 : <span th:text="${#dates.format(today, 'yyyy년 MM월 dd일')}">날짜</span><br>
+        yyyy년 : <span th:text="${#dates.year(today)}">년</span><br>
+        MM월 : <span th:text="${#dates.month(today)}">월</span><br>
+        dd일 : <span th:text="${#dates.day(today)}">일</span><br>
+        요일 : <span th:text="${#dates.dayOfWeek(today)}">요일</span>
+    </div>
+    <br>
+
+    <!-- 21: 유틸리티 - 문자열 -->
+    <h3>21: 유틸리티 - 문자열</h3>
+    <div th:with="str='abcdef'">
+        대문자 변환 : <span th:text="${#strings.toUpperCase(str)}">대문자</span><br>
+        빈 문자 체크 : <span th:text="${#strings.isEmpty(str)}">결과</span><br>
+        길이 : <span th:text="${#strings.length(str)}">길이</span>
+    </div>
+    <br>
+
+    <hr>
+    <!-- common.html fragment로 삽입 -->
+    <div id="one" th:insert="~{common :: header}"></div>
+    <h2>위 아래 프레그먼트 삽입</h2>
+    <div id="two" th:replace="~{common :: footer}"></div>
+</section>
+</body>
+</html>

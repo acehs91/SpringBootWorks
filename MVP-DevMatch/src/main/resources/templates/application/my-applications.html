@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 지원내역 - DevMatch</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/}">
+                <i class="bi bi-code-slash me-2"></i>DevMatch
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/jobs}">채용공고</a></li>
+                    <li class="nav-item"><a class="nav-link active" th:href="@{/applications/my}">내 지원내역</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+        <!-- 알림 메시지 -->
+        <div th:if="${message}" class="alert alert-success alert-dismissible fade show">
+            <i class="bi bi-check-circle me-2"></i><span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+            <i class="bi bi-exclamation-circle me-2"></i><span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <h2 class="mb-4"><i class="bi bi-send-check me-2"></i>내 지원내역</h2>
+
+        <!-- 지원내역 없음 -->
+        <div th:if="${#lists.isEmpty(applications)}" class="text-center py-5">
+            <i class="bi bi-inbox display-1 text-muted"></i>
+            <p class="text-muted mt-3">아직 지원한 공고가 없습니다.</p>
+            <a th:href="@{/jobs}" class="btn btn-primary">채용공고 보러가기</a>
+        </div>
+
+        <!-- 지원내역 목록 -->
+        <div th:unless="${#lists.isEmpty(applications)}" class="row g-3">
+            <div th:each="app : ${applications}" class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h5 class="mb-1">
+                                    <a th:href="@{/jobs/view/{id}(id=${app.postingId})}" 
+                                       class="text-decoration-none" th:text="${app.postingTitle}">공고제목</a>
+                                </h5>
+                                <p class="text-muted mb-0">
+                                    <i class="bi bi-building me-1"></i>
+                                    <span th:text="${app.companyName}">회사명</span>
+                                </p>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">제출 이력서</small>
+                                <p class="mb-0" th:text="${app.resumeTitle} ?: '삭제됨'">이력서</p>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <!-- 상태 뱃지 -->
+                                <span th:switch="${app.status}">
+                                    <span th:case="'PENDING'" class="badge bg-warning text-dark">검토대기</span>
+                                    <span th:case="'REVIEWED'" class="badge bg-info">검토중</span>
+                                    <span th:case="'ACCEPTED'" class="badge bg-success">합격</span>
+                                    <span th:case="'REJECTED'" class="badge bg-danger">불합격</span>
+                                </span>
+                                <small class="d-block text-muted mt-1" 
+                                       th:text="${#temporals.format(app.createdAt, 'MM/dd')}">01/01</small>
+                            </div>
+                            <div class="col-md-1 text-end">
+                                <!-- PENDING일 때만 취소 가능 -->
+                                <form th:if="${app.status == 'PENDING'}" 
+                                      th:action="@{/applications/cancel/{id}(id=${app.applicationId})}" 
+                                      method="post" 
+                                      onsubmit="return confirm('지원을 취소하시겠습니까?')">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

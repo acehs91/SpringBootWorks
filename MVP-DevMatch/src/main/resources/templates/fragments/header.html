@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- Header - 기본 (투명 X) -->
+<header th:fragment="header" class="header">
+    <div class="header__inner">
+        <a th:href="@{/}" class="header__logo">
+            <svg class="header__logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            DevMatch
+        </a>
+
+        <nav class="header__nav">
+            <a th:href="@{/jobs}" class="header__nav-link">채용공고</a>
+            <a th:href="@{/resumes}" class="header__nav-link">인재풀</a>
+        </nav>
+
+        <div class="header__actions" sec:authorize="!isAuthenticated()">
+            <a th:href="@{/auth/login}" class="btn btn--ghost">로그인</a>
+            <a th:href="@{/auth/register}" class="btn btn--primary">회원가입</a>
+        </div>
+
+        <div class="header__actions" sec:authorize="isAuthenticated()">
+            <a th:href="@{/messages}" class="btn btn--ghost btn--icon-only" title="메시지">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </a>
+            <a th:href="@{/dashboard}" class="btn btn--outline">대시보드</a>
+        </div>
+
+        <!-- Mobile Toggle -->
+        <button class="header__toggle" id="mobileToggle" aria-label="메뉴 열기">
+            <span class="header__toggle-bar"></span>
+            <span class="header__toggle-bar"></span>
+            <span class="header__toggle-bar"></span>
+        </button>
+    </div>
+</header>
+
+<!-- Header - 다크 버전 (히어로용) -->
+<header th:fragment="header-dark" class="header header--dark">
+    <div class="header__inner">
+        <a th:href="@{/}" class="header__logo">
+            <svg class="header__logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            DevMatch
+        </a>
+
+        <nav class="header__nav">
+            <a th:href="@{/jobs}" class="header__nav-link">채용공고</a>
+            <a th:href="@{/resumes}" class="header__nav-link">인재풀</a>
+        </nav>
+
+        <div class="header__actions" sec:authorize="!isAuthenticated()">
+            <a th:href="@{/auth/login}" class="btn btn--ghost">로그인</a>
+            <a th:href="@{/auth/register}" class="btn btn--outline">회원가입</a>
+        </div>
+
+        <div class="header__actions" sec:authorize="isAuthenticated()">
+            <a th:href="@{/messages}" class="btn btn--ghost btn--icon-only" title="메시지">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </a>
+            <a th:href="@{/dashboard}" class="btn btn--outline">대시보드</a>
+        </div>
+
+        <!-- Mobile Toggle -->
+        <button class="header__toggle" id="mobileToggle" aria-label="메뉴 열기">
+            <span class="header__toggle-bar"></span>
+            <span class="header__toggle-bar"></span>
+            <span class="header__toggle-bar"></span>
+        </button>
+    </div>
+</header>
+
+<!-- Mobile Navigation -->
+<div th:fragment="mobile-nav" class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav__header">
+        <a th:href="@{/}" class="header__logo">DevMatch</a>
+        <button class="mobile-nav__close" id="mobileClose" aria-label="메뉴 닫기">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <nav class="mobile-nav__body">
+        <a th:href="@{/jobs}" class="mobile-nav__link">채용공고</a>
+        <a th:href="@{/resumes}" class="mobile-nav__link">인재풀</a>
+        <a th:href="@{/dashboard}" class="mobile-nav__link" sec:authorize="isAuthenticated()">대시보드</a>
+        <a th:href="@{/messages}" class="mobile-nav__link" sec:authorize="isAuthenticated()">메시지</a>
+    </nav>
+    <div class="mobile-nav__footer" sec:authorize="!isAuthenticated()">
+        <a th:href="@{/auth/login}" class="btn btn--outline btn--block mb-3">로그인</a>
+        <a th:href="@{/auth/register}" class="btn btn--primary btn--block">회원가입</a>
+    </div>
+    <div class="mobile-nav__footer" sec:authorize="isAuthenticated()">
+        <a th:href="@{/logout}" class="btn btn--danger btn--block">로그아웃</a>
+    </div>
+</div>
+<div class="mobile-nav-overlay" id="mobileOverlay"></div>
+
+</html>

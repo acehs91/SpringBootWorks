@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('로그인')}"></head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-card__body">
+                <!-- Header -->
+                <div class="auth-header">
+                    <a th:href="@{/}" class="auth-header__logo">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                        DevMatch
+                    </a>
+                    <h1 class="auth-header__title">로그인</h1>
+                    <p class="auth-header__subtitle">계정에 로그인하세요</p>
+                </div>
+
+                <!-- Error Message -->
+                <div th:if="${param.error}" class="alert alert--danger mb-4">
+                    <svg class="alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    <div class="alert__content">
+                        <div class="alert__message">이메일 또는 비밀번호가 올바르지 않습니다.</div>
+                    </div>
+                </div>
+
+                <!-- Logout Message -->
+                <div th:if="${param.logout}" class="alert alert--success mb-4">
+                    <svg class="alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <div class="alert__content">
+                        <div class="alert__message">로그아웃 되었습니다.</div>
+                    </div>
+                </div>
+
+                <!-- Login Form -->
+                <form th:action="@{/auth/login}" method="post" class="auth-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">이메일</label>
+                        <input type="email" id="email" name="email" class="form-input" 
+                               placeholder="example@email.com" required autofocus>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">비밀번호</label>
+                        <input type="password" id="password" name="password" class="form-input" 
+                               placeholder="비밀번호 입력" required>
+                    </div>
+
+                    <div class="auth-options">
+                        <label class="form-check">
+                            <input type="checkbox" name="remember-me" class="form-check-input">
+                            <span class="form-check-label">로그인 유지</span>
+                        </label>
+                        <a href="#" class="auth-options__link">비밀번호 찾기</a>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--block btn--lg">
+                        로그인
+                    </button>
+                </form>
+
+                <!-- Social Login -->
+                <div class="auth-divider">
+                    <span class="auth-divider__text">또는</span>
+                </div>
+
+                <div class="social-auth">
+                    <a th:href="@{/oauth2/authorization/google}" class="social-auth__btn">
+                        <svg class="social-auth__icon" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Google로 로그인
+                    </a>
+                </div>
+
+                <!-- Footer -->
+                <div class="auth-footer">
+                    <p class="auth-footer__text">
+                        아직 계정이 없으신가요?
+                        <a th:href="@{/auth/register}" class="auth-footer__link">회원가입</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

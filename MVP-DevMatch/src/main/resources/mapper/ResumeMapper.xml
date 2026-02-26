@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.devmatch.mapper.ResumeMapper">
+
+    <!-- 이력서 등록 -->
+    <insert id="insertResume" parameterType="ResumeDTO">
+        <selectKey keyProperty="resumeId" resultType="long" order="BEFORE">
+            SELECT dm_resume_seq.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO dm_resume (
+            resume_id, member_id, title, introduction, skills,
+            experience, education, portfolio_url, github_url,
+            salary_type, salary_amount, is_public, view_count,
+            created_at, updated_at
+        ) VALUES (
+            #{resumeId}, #{memberId}, #{title}, #{introduction}, #{skills},
+            #{experience}, #{education}, #{portfolioUrl}, #{githubUrl},
+            #{salaryType}, #{salaryAmount}, NVL(#{isPublic}, 'Y'), 0,
+            SYSDATE, SYSDATE
+        )
+    </insert>
+
+    <!-- 이력서 조회 (ID) -->
+    <select id="selectResumeById" resultType="ResumeDTO">
+        SELECT 
+            r.resume_id, r.member_id, r.title, r.introduction, r.skills,
+            r.experience, r.education, r.portfolio_url, r.github_url,
+            r.salary_type, r.salary_amount, r.is_public, r.view_count,
+            r.created_at, r.updated_at,
+            m.name AS member_name, m.email AS member_email
+        FROM dm_resume r
+        JOIN dm_member m ON r.member_id = m.member_id
+        WHERE r.resume_id = #{resumeId}
+    </select>
+
+    <!-- 이력서 목록 (회원별) -->
+    <select id="selectResumesByMemberId" resultType="ResumeDTO">
+        SELECT 
+            resume_id, member_id, title, introduction, skills,
+            experience, education, portfolio_url, github_url,
+            salary_type, salary_amount, is_public, view_count,
+            created_at, updated_at
+        FROM dm_resume
+        WHERE member_id = #{memberId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 이력서 목록 (전체 공개) -->
+    <select id="selectPublicResumes" resultType="ResumeDTO">
+        SELECT 
+            r.resume_id, r.member_id, r.title, r.introduction, r.skills,
+            r.experience, r.education, r.portfolio_url, r.github_url,
+            r.salary_type, r.salary_amount, r.is_public, r.view_count,
+            r.created_at, r.updated_at,
+            m.name AS member_name, m.email AS member_email
+        FROM dm_resume r
+        JOIN dm_member m ON r.member_id = m.member_id
+        WHERE r.is_public = 'Y'
+        ORDER BY r.created_at DESC
+    </select>
+
+    <!-- 이력서 검색 (기술스택) -->
+    <select id="searchResumesBySkills" resultType="ResumeDTO">
+        SELECT 
+            r.resume_id, r.member_id, r.title, r.introduction, r.skills,
+            r.experience, r.education, r.portfolio_url, r.github_url,
+            r.salary_type, r.salary_amount, r.is_public, r.view_count,
+            r.created_at, r.updated_at,
+            m.name AS member_name, m.email AS member_email
+        FROM dm_resume r
+        JOIN dm_member m ON r.member_id = m.member_id
+        WHERE r.is_public = 'Y'
+          AND UPPER(r.skills) LIKE '%' || UPPER(#{skills}) || '%'
+        ORDER BY r.created_at DESC
+    </select>
+
+    <!-- 이력서 검색 (키워드) -->
+    <select id="searchResumes" resultType="ResumeDTO">
+        SELECT 
+            r.resume_id, r.member_id, r.title, r.introduction, r.skills,
+            r.experience, r.education, r.portfolio_url, r.github_url,
+            r.salary_type, r.salary_amount, r.is_public, r.view_count,
+            r.created_at, r.updated_at,
+            m.name AS member_name, m.email AS member_email
+        FROM dm_resume r
+        JOIN dm_member m ON r.member_id = m.member_id
+        WHERE r.is_public = 'Y'
+          AND (
+              UPPER(r.title) LIKE '%' || UPPER(#{keyword}) || '%'
+              OR UPPER(r.skills) LIKE '%' || UPPER(#{keyword}) || '%'
+              OR UPPER(r.introduction) LIKE '%' || UPPER(#{keyword}) || '%'
+          )
+        ORDER BY r.created_at DESC
+    </select>
+
+    <!-- 이력서 수정 -->
+    <update id="updateResume" parameterType="ResumeDTO">
+        UPDATE dm_resume SET
+            title = #{title},
+            introduction = #{introduction},
+            skills = #{skills},
+            experience = #{experience},
+            education = #{education},
+            portfolio_url = #{portfolioUrl},
+            github_url = #{githubUrl},
+            salary_type = #{salaryType},
+            salary_amount = #{salaryAmount},
+            is_public = #{isPublic},
+            updated_at = SYSDATE
+        WHERE resume_id = #{resumeId}
+    </update>
+
+    <!-- 이력서 삭제 -->
+    <delete id="deleteResume">
+        DELETE FROM dm_resume WHERE resume_id = #{resumeId}
+    </delete>
+
+    <!-- 조회수 증가 -->
+    <update id="incrementViewCount">
+        UPDATE dm_resume SET view_count = view_count + 1
+        WHERE resume_id = #{resumeId}
+    </update>
+
+    <!-- 이력서 개수 (회원별) -->
+    <select id="countByMemberId" resultType="int">
+        SELECT COUNT(*) FROM dm_resume WHERE member_id = #{memberId}
+    </select>
+
+</mapper>

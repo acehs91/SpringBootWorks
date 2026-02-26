@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <h1>스프링부트 시작!</h1>
+  <hr>
+  <form action="./output.html" th:action="@{/result}" method="get">
+      <label for="get_value">입력값 :</label>
+      <input type="text" id="get_value" name="val">
+    <button type="submit">GET 으로 전송</button>
+  </form>
+  <br>
+  <form action="./output.html" th:action="@{/result}" method="post">
+    <label for="post_value">입력값 :</label>
+    <input type="text" id="post_value" name="val">
+    <button type="submit">POST 으로 전송</button>
+  </form>
+</body>
+</html>

@@ -1,0 +1,225 @@
+/* ===================================
+   Grid System
+   Flexbox + CSS Grid 기반
+   =================================== */
+
+/* ─────────────────────────────────
+   Container
+   ───────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+.container-fluid {
+  width: 100%;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+.container-narrow {
+  max-width: 720px;
+}
+
+.container-wide {
+  max-width: 1600px;
+}
+
+/* ─────────────────────────────────
+   Row (Flexbox)
+   ───────────────────────────────── */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: calc(var(--spacing-4) * -1);
+  margin-right: calc(var(--spacing-4) * -1);
+}
+
+.row > * {
+  padding-left: var(--spacing-4);
+  padding-right: var(--spacing-4);
+}
+
+/* Gap variations */
+.row-gap-0 {
+  margin-left: 0;
+  margin-right: 0;
+}
+.row-gap-0 > * {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.row-gap-sm {
+  margin-left: calc(var(--spacing-2) * -1);
+  margin-right: calc(var(--spacing-2) * -1);
+}
+.row-gap-sm > * {
+  padding-left: var(--spacing-2);
+  padding-right: var(--spacing-2);
+}
+
+.row-gap-lg {
+  margin-left: calc(var(--spacing-6) * -1);
+  margin-right: calc(var(--spacing-6) * -1);
+}
+.row-gap-lg > * {
+  padding-left: var(--spacing-6);
+  padding-right: var(--spacing-6);
+}
+
+/* ─────────────────────────────────
+   Columns (12-column grid)
+   ───────────────────────────────── */
+.col { flex: 1 0 0%; }
+.col-auto { flex: 0 0 auto; width: auto; }
+
+.col-1 { flex: 0 0 auto; width: 8.333333%; }
+.col-2 { flex: 0 0 auto; width: 16.666667%; }
+.col-3 { flex: 0 0 auto; width: 25%; }
+.col-4 { flex: 0 0 auto; width: 33.333333%; }
+.col-5 { flex: 0 0 auto; width: 41.666667%; }
+.col-6 { flex: 0 0 auto; width: 50%; }
+.col-7 { flex: 0 0 auto; width: 58.333333%; }
+.col-8 { flex: 0 0 auto; width: 66.666667%; }
+.col-9 { flex: 0 0 auto; width: 75%; }
+.col-10 { flex: 0 0 auto; width: 83.333333%; }
+.col-11 { flex: 0 0 auto; width: 91.666667%; }
+.col-12 { flex: 0 0 auto; width: 100%; }
+
+/* ─────────────────────────────────
+   CSS Grid
+   ───────────────────────────────── */
+.grid {
+  display: grid;
+  gap: var(--spacing-4);
+}
+
+.grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+.grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+
+/* Auto-fit responsive grid */
+.grid-auto-fit {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.grid-auto-fill {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+/* Gap variations */
+.gap-0 { gap: 0; }
+.gap-1 { gap: var(--spacing-1); }
+.gap-2 { gap: var(--spacing-2); }
+.gap-3 { gap: var(--spacing-3); }
+.gap-4 { gap: var(--spacing-4); }
+.gap-5 { gap: var(--spacing-5); }
+.gap-6 { gap: var(--spacing-6); }
+.gap-8 { gap: var(--spacing-8); }
+
+/* ─────────────────────────────────
+   Flexbox Utilities
+   ───────────────────────────────── */
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+
+/* Direction */
+.flex-row { flex-direction: row; }
+.flex-row-reverse { flex-direction: row-reverse; }
+.flex-col { flex-direction: column; }
+.flex-col-reverse { flex-direction: column-reverse; }
+
+/* Wrap */
+.flex-wrap { flex-wrap: wrap; }
+.flex-nowrap { flex-wrap: nowrap; }
+
+/* Justify Content */
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+.justify-evenly { justify-content: space-evenly; }
+
+/* Align Items */
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.items-center { align-items: center; }
+.items-baseline { align-items: baseline; }
+.items-stretch { align-items: stretch; }
+
+/* Align Self */
+.self-start { align-self: flex-start; }
+.self-end { align-self: flex-end; }
+.self-center { align-self: center; }
+.self-stretch { align-self: stretch; }
+
+/* Flex grow/shrink */
+.flex-1 { flex: 1 1 0%; }
+.flex-auto { flex: 1 1 auto; }
+.flex-none { flex: none; }
+.grow { flex-grow: 1; }
+.grow-0 { flex-grow: 0; }
+.shrink { flex-shrink: 1; }
+.shrink-0 { flex-shrink: 0; }
+
+/* ─────────────────────────────────
+   Responsive - Tablet (1024px)
+   ───────────────────────────────── */
+@media (max-width: 1024px) {
+  .md\:col-1 { width: 8.333333%; }
+  .md\:col-2 { width: 16.666667%; }
+  .md\:col-3 { width: 25%; }
+  .md\:col-4 { width: 33.333333%; }
+  .md\:col-5 { width: 41.666667%; }
+  .md\:col-6 { width: 50%; }
+  .md\:col-7 { width: 58.333333%; }
+  .md\:col-8 { width: 66.666667%; }
+  .md\:col-9 { width: 75%; }
+  .md\:col-10 { width: 83.333333%; }
+  .md\:col-11 { width: 91.666667%; }
+  .md\:col-12 { width: 100%; }
+
+  .md\:grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ─────────────────────────────────
+   Responsive - Mobile L (768px)
+   ───────────────────────────────── */
+@media (max-width: 768px) {
+  .container {
+    padding-left: var(--spacing-4);
+    padding-right: var(--spacing-4);
+  }
+
+  .sm\:col-6 { width: 50%; }
+  .sm\:col-12 { width: 100%; }
+
+  .sm\:grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+  .sm\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+  .sm\:flex-col { flex-direction: column; }
+}
+
+/* ─────────────────────────────────
+   Responsive - Mobile S (520px)
+   ───────────────────────────────── */
+@media (max-width: 520px) {
+  .container {
+    padding-left: var(--spacing-3);
+    padding-right: var(--spacing-3);
+  }
+
+  .xs\:col-12 { width: 100%; }
+  .xs\:grid-cols-1 { grid-template-columns: 1fr; }
+}

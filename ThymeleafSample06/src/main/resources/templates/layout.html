@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--base = 프레그먼트 이름 | title, content => 외부 전달 파라미터-->
+<html xmlns:th="http://www.thymeleaf.org"  th:fragment="base(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <!-- 외부 타이틀 -->
+    <title th:replace="${title}">
+        공통 레이아웃 타임리프
+    </title>
+</head>
+<body>
+    <div>
+        <h1>
+            =====================<br>
+            layout.공통 헤더 <br>
+            =====================<br>
+        </h1>
+    </div>
+    <div th:replace="${content}">
+        layout.내용
+    </div>
+    <div>
+        <h2>
+            =====================<br>
+            layout.공통 푸터 <br>
+            =====================<br>
+        </h2>
+    </div>
+</body>
+</html>

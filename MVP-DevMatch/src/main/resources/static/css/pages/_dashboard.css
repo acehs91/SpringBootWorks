@@ -1,0 +1,295 @@
+/* ===================================
+   Dashboard Page Styles
+   =================================== */
+
+/* ─────────────────────────────────
+   Dashboard Header
+   ───────────────────────────────── */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-6);
+}
+
+.dashboard-header__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.dashboard-header__subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-1);
+}
+
+/* ─────────────────────────────────
+   Dashboard Stats
+   ───────────────────────────────── */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+}
+
+/* ─────────────────────────────────
+   Dashboard Grid
+   ───────────────────────────────── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-6);
+}
+
+.dashboard-grid--equal {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ─────────────────────────────────
+   Quick Actions
+   ───────────────────────────────── */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-4);
+}
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-5);
+  text-align: center;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+}
+
+.quick-action:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-50);
+  transform: translateY(-2px);
+}
+
+.quick-action__icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: var(--spacing-3);
+  color: var(--color-primary);
+}
+
+.quick-action__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+/* ─────────────────────────────────
+   Activity Feed
+   ───────────────────────────────── */
+.activity-feed {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-item {
+  display: flex;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4) 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-gray-100);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.activity-item__icon--primary {
+  background-color: var(--color-primary-100);
+  color: var(--color-primary);
+}
+
+.activity-item__icon--success {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.activity-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-item__text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-1);
+}
+
+.activity-item__time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* ─────────────────────────────────
+   List Items (채용공고, 지원 등)
+   ───────────────────────────────── */
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
+}
+
+.list-item:hover {
+  background-color: var(--color-gray-50);
+}
+
+.list-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-item__title {
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-1);
+  color: var(--color-text);
+}
+
+.list-item__title:hover {
+  color: var(--color-primary);
+}
+
+.list-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.list-item__actions {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+/* ─────────────────────────────────
+   Chart Placeholder
+   ───────────────────────────────── */
+.chart-placeholder {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+}
+
+/* ─────────────────────────────────
+   Welcome Banner
+   ───────────────────────────────── */
+.welcome-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-6);
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
+  border-radius: var(--radius-xl);
+  color: var(--color-text-inverse);
+  margin-bottom: var(--spacing-6);
+}
+
+.welcome-banner__content {
+  max-width: 60%;
+}
+
+.welcome-banner__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-2);
+}
+
+.welcome-banner__text {
+  opacity: 0.9;
+  margin-bottom: var(--spacing-4);
+}
+
+.welcome-banner__btn {
+  background-color: var(--color-bg);
+  color: var(--color-primary);
+}
+
+.welcome-banner__btn:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-primary);
+}
+
+/* ─────────────────────────────────
+   Responsive
+   ───────────────────────────────── */
+@media (max-width: 1024px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+  }
+
+  .welcome-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .welcome-banner__content {
+    max-width: 100%;
+    margin-bottom: var(--spacing-4);
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .list-item__actions {
+    margin-top: var(--spacing-3);
+    width: 100%;
+  }
+
+  .list-item__actions .btn {
+    flex: 1;
+  }
+}

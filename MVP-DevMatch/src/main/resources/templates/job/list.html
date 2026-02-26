@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채용공고 - DevMatch</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/}">
+                <i class="bi bi-code-slash me-2"></i>DevMatch
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link active" th:href="@{/jobs}">채용공고</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/resumes}">인재풀</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/auth/login}">로그인</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 -->
+    <main class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-briefcase me-2"></i>채용공고</h2>
+        </div>
+
+        <!-- 검색 -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <form th:action="@{/jobs}" method="get" class="row g-3">
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" name="keyword" 
+                               th:value="${keyword}" placeholder="회사명, 기술스택, 키워드로 검색...">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search me-1"></i>검색
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 검색 결과 -->
+        <p class="text-muted mb-3" th:if="${keyword}">
+            "<span th:text="${keyword}"></span>" 검색 결과: <span th:text="${#lists.size(jobs)}">0</span>건
+        </p>
+
+        <!-- 채용공고 목록 -->
+        <div class="row g-4">
+            <div class="col-12" th:each="job : ${jobs}">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h5 class="card-title mb-2">
+                                    <a th:href="@{/jobs/view/{id}(id=${job.postingId})}" 
+                                       class="text-decoration-none text-dark"
+                                       th:text="${job.title}">채용공고 제목</a>
+                                </h5>
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-building me-1"></i>
+                                    <span th:text="${job.companyName} ?: '회사명 미공개'">회사명</span>
+                                    <span class="mx-2">|</span>
+                                    <i class="bi bi-geo-alt me-1"></i>
+                                    <span th:text="${job.location} ?: '위치 미정'">서울</span>
+                                </p>
+                                <!-- 기술스택 -->
+                                <div class="mb-2" th:if="${job.skills}">
+                                    <span th:each="skill : ${#strings.arraySplit(job.skills, ',')}"
+                                          class="badge bg-primary bg-opacity-10 text-primary me-1"
+                                          th:text="${#strings.trim(skill)}">Java</span>
+                                </div>
+                                <div class="d-flex gap-3 text-muted small">
+                                    <span th:switch="${job.workType}">
+                                        <span th:case="'REMOTE'"><i class="bi bi-house me-1"></i>원격</span>
+                                        <span th:case="'ONSITE'"><i class="bi bi-building me-1"></i>출근</span>
+                                        <span th:case="'HYBRID'"><i class="bi bi-arrow-left-right me-1"></i>하이브리드</span>
+                                    </span>
+                                    <span th:switch="${job.employmentType}">
+                                        <span th:case="'FULL_TIME'">정규직</span>
+                                        <span th:case="'PART_TIME'">파트타임</span>
+                                        <span th:case="'CONTRACT'">계약직</span>
+                                        <span th:case="'FREELANCE'">프리랜서</span>
+                                    </span>
+                                    <span th:if="${job.salaryMin != null}">
+                                        <span th:text="${#numbers.formatInteger(job.salaryMin, 3, 'COMMA')}">0</span>원 ~
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end d-flex flex-column justify-content-between">
+                                <div>
+                                    <small class="text-muted">
+                                        <i class="bi bi-eye me-1"></i><span th:text="${job.viewCount}">0</span>
+                                        <span class="mx-1">|</span>
+                                        <i class="bi bi-people me-1"></i><span th:text="${job.applicationCount} ?: 0">0</span>명 지원
+                                    </small>
+                                </div>
+                                <div>
+                                    <span th:if="${job.deadline}" class="badge bg-warning text-dark">
+                                        D-<span th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), job.deadline)}">7</span>
+                                    </span>
+                                    <a th:href="@{/jobs/view/{id}(id=${job.postingId})}" 
+                                       class="btn btn-sm btn-outline-primary ms-2">상세보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 데이터 없음 -->
+            <div class="col-12" th:if="${#lists.isEmpty(jobs)}">
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox text-muted display-1"></i>
+                    <p class="text-muted mt-3">등록된 채용공고가 없습니다.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2025 DevMatch. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

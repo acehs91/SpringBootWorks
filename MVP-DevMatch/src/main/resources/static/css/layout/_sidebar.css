@@ -1,0 +1,270 @@
+/* ===================================
+   Sidebar (Dashboard Layout)
+   =================================== */
+
+/* ─────────────────────────────────
+   Dashboard Layout
+   ───────────────────────────────── */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  padding-top: var(--header-height);
+}
+
+/* ─────────────────────────────────
+   Sidebar
+   ───────────────────────────────── */
+.sidebar {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--header-height));
+  background-color: var(--color-bg);
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  z-index: var(--z-sticky);
+  transition: all var(--transition-base);
+}
+
+.sidebar--dark {
+  background-color: var(--color-gray-900);
+  border-right-color: var(--color-gray-800);
+}
+
+/* ─────────────────────────────────
+   Sidebar Header
+   ───────────────────────────────── */
+.sidebar__header {
+  padding: var(--spacing-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar--dark .sidebar__header {
+  border-bottom-color: var(--color-gray-800);
+}
+
+/* User Profile */
+.sidebar__profile {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.sidebar__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+.sidebar__user-name {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.sidebar__user-role {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.sidebar--dark .sidebar__user-name {
+  color: var(--color-text-inverse);
+}
+
+.sidebar--dark .sidebar__user-role {
+  color: var(--color-gray-400);
+}
+
+/* ─────────────────────────────────
+   Sidebar Navigation
+   ───────────────────────────────── */
+.sidebar__nav {
+  padding: var(--spacing-4) 0;
+}
+
+.sidebar__nav-group {
+  margin-bottom: var(--spacing-4);
+}
+
+.sidebar__nav-title {
+  padding: var(--spacing-2) var(--spacing-6);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sidebar--dark .sidebar__nav-title {
+  color: var(--color-gray-500);
+}
+
+.sidebar__nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.sidebar__nav-item:hover {
+  color: var(--color-text);
+  background-color: var(--color-gray-50);
+}
+
+.sidebar__nav-item.is-active {
+  color: var(--color-primary);
+  background-color: var(--color-primary-50);
+  border-right: 3px solid var(--color-primary);
+}
+
+.sidebar--dark .sidebar__nav-item {
+  color: var(--color-gray-400);
+}
+
+.sidebar--dark .sidebar__nav-item:hover {
+  color: var(--color-text-inverse);
+  background-color: var(--color-gray-800);
+}
+
+.sidebar--dark .sidebar__nav-item.is-active {
+  color: var(--color-primary-300);
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.sidebar__nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar__nav-badge {
+  margin-left: auto;
+  padding: 2px 8px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  background-color: var(--color-danger);
+  color: var(--color-text-inverse);
+  border-radius: var(--radius-full);
+}
+
+/* ─────────────────────────────────
+   Sidebar Footer
+   ───────────────────────────────── */
+.sidebar__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
+.sidebar--dark .sidebar__footer {
+  border-top-color: var(--color-gray-800);
+  background-color: var(--color-gray-900);
+}
+
+/* ─────────────────────────────────
+   Main Content
+   ───────────────────────────────── */
+.dashboard-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: var(--spacing-8);
+  background-color: var(--color-bg-secondary);
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* ─────────────────────────────────
+   Collapsed Sidebar
+   ───────────────────────────────── */
+.sidebar.is-collapsed {
+  width: var(--sidebar-width-collapsed);
+}
+
+.sidebar.is-collapsed .sidebar__header,
+.sidebar.is-collapsed .sidebar__nav-title,
+.sidebar.is-collapsed .sidebar__user-info,
+.sidebar.is-collapsed .sidebar__nav-text {
+  display: none;
+}
+
+.sidebar.is-collapsed .sidebar__nav-item {
+  justify-content: center;
+  padding: var(--spacing-3);
+}
+
+.sidebar.is-collapsed ~ .dashboard-content {
+  margin-left: var(--sidebar-width-collapsed);
+}
+
+/* ─────────────────────────────────
+   Responsive
+   ───────────────────────────────── */
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .dashboard-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-layout {
+    padding-top: var(--header-height-mobile);
+  }
+
+  .sidebar {
+    top: var(--header-height-mobile);
+    height: calc(100vh - var(--header-height-mobile));
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .dashboard-content {
+    padding: var(--spacing-4);
+  }
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  width: 100%;
+  height: calc(100vh - var(--header-height));
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: calc(var(--z-sticky) - 1);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.sidebar-overlay.is-visible {
+  display: block;
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .sidebar-overlay {
+    top: var(--header-height-mobile);
+    height: calc(100vh - var(--header-height-mobile));
+  }
+}

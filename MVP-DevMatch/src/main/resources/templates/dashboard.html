@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head('대시보드')}"></head>
+<body class="has-header">
+    <!-- Header -->
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+    <th:block th:replace="~{fragments/header :: mobile-nav}"></th:block>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="welcome-banner__content">
+                    <h2 class="welcome-banner__title">
+                        안녕하세요, <span th:text="${member.name}">사용자</span>님! 👋
+                    </h2>
+                    <p class="welcome-banner__text">
+                        오늘도 좋은 매칭을 찾아보세요.
+                    </p>
+                    <a sec:authorize="hasRole('DEVELOPER')" th:href="@{/jobs}" class="btn welcome-banner__btn">
+                        채용공고 보기
+                    </a>
+                    <a sec:authorize="hasRole('CLIENT')" th:href="@{/resumes}" class="btn welcome-banner__btn">
+                        인재풀 검색
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="dashboard-stats">
+                <div class="card stat-card">
+                    <div class="stat-card__icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                    </div>
+                    <div class="stat-card__content">
+                        <div class="stat-card__label" sec:authorize="hasRole('DEVELOPER')">내 이력서</div>
+                        <div class="stat-card__label" sec:authorize="hasRole('CLIENT')">내 공고</div>
+                        <div class="stat-card__value" th:text="${resumeCount != null} ? ${resumeCount} : (${jobCount != null} ? ${jobCount} : 0)">0</div>
+                    </div>
+                </div>
+
+                <div class="card stat-card" sec:authorize="hasRole('DEVELOPER')">
+                    <div class="stat-card__icon stat-card__icon--success">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="stat-card__content">
+                        <div class="stat-card__label">지원 현황</div>
+                        <div class="stat-card__value" th:text="${applicationCount} ?: 0">0</div>
+                    </div>
+                </div>
+
+                <div class="card stat-card" sec:authorize="hasRole('CLIENT')">
+                    <div class="stat-card__icon stat-card__icon--success">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-card__content">
+                        <div class="stat-card__label">받은 지원</div>
+                        <div class="stat-card__value" th:text="${receivedApplicationCount} ?: 0">0</div>
+                    </div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-card__icon stat-card__icon--warning">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-card__content">
+                        <div class="stat-card__label">메시지</div>
+                        <div class="stat-card__value" th:text="${messageCount} ?: 0">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card__header">
+                        <h3 class="card__title">빠른 실행</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="quick-actions">
+                            <a th:href="@{/resumes/create}" class="quick-action" sec:authorize="hasRole('DEVELOPER')">
+                                <svg class="quick-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <span class="quick-action__label">이력서 등록</span>
+                            </a>
+                            <a th:href="@{/jobs}" class="quick-action" sec:authorize="hasRole('DEVELOPER')">
+                                <svg class="quick-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.3-4.3"></path>
+                                </svg>
+                                <span class="quick-action__label">채용공고 검색</span>
+                            </a>
+                            <a th:href="@{/jobs/create}" class="quick-action" sec:authorize="hasRole('CLIENT')">
+                                <svg class="quick-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <span class="quick-action__label">공고 등록</span>
+                            </a>
+                            <a th:href="@{/resumes}" class="quick-action" sec:authorize="hasRole('CLIENT')">
+                                <svg class="quick-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                </svg>
+                                <span class="quick-action__label">인재풀 검색</span>
+                            </a>
+                            <a th:href="@{/messages}" class="quick-action">
+                                <svg class="quick-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <span class="quick-action__label">메시지</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card__header">
+                        <h3 class="card__title">프로필 완성도</h3>
+                    </div>
+                    <div class="card__body text-center">
+                        <div class="avatar avatar--xl mx-auto mb-4" th:text="${#strings.substring(member.name, 0, 1)}">U</div>
+                        <h4 class="mb-1" th:text="${member.name}">사용자</h4>
+                        <p class="text-muted text-sm mb-4">
+                            <span sec:authorize="hasRole('DEVELOPER')">개발자</span>
+                            <span sec:authorize="hasRole('CLIENT')">의뢰인</span>
+                        </p>
+                        <a sec:authorize="hasRole('DEVELOPER')" th:href="@{/resumes/my}" class="btn btn--outline btn--sm">
+                            이력서 관리
+                        </a>
+                        <a sec:authorize="hasRole('CLIENT')" th:href="@{/jobs/my}" class="btn btn--outline btn--sm">
+                            공고 관리
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>결과화면</title>
+</head>
+<body>
+    <h1>입력 결과</h1>
+    <hr>
+    <li>이름: <span th:text="${sampleForm.name}"></span></li>
+    <li>나이: <span th:text="${sampleForm.age}"></span></li>
+    <li>생년월일: <span th:text="${sampleForm.birth}"></span></li>
+    <br>
+    <a th:href="@{/multiple}">다시 입력하기</a>
+</body>
+</html>

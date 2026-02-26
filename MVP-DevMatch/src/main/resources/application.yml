@@ -1,0 +1,44 @@
+# =====================================
+# MVP-DevMatch Application Configuration
+# 개발자 매칭 플랫폼 설정 파일
+# =====================================
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: MVP-DevMatch
+  
+  # ===== Oracle Database 설정 =====
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: scott
+    password: tiger
+  
+  # ===== Thymeleaf 설정 =====
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+  
+  # ===== 파일 업로드 설정 =====
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# ===== MyBatis 설정 =====
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+  type-aliases-package: com.devmatch.dto
+  configuration:
+    map-underscore-to-camel-case: true
+
+# ===== 로깅 설정 =====
+logging:
+  level:
+    com.devmatch: DEBUG
+    org.springframework.security: DEBUG

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' - DevMatch'">채용공고 - DevMatch</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/}">
+                <i class="bi bi-code-slash me-2"></i>DevMatch
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/jobs}">채용공고</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/resumes}">인재풀</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 -->
+    <main class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h4 class="mb-0" th:text="${pageTitle}">채용공고 등록</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- 알림 메시지 -->
+                        <div th:if="${errorMsg}" class="alert alert-danger">
+                            <span th:text="${errorMsg}"></span>
+                        </div>
+
+                        <form th:action="${job.postingId != null} ? @{/jobs/edit/{id}(id=${job.postingId})} : @{/jobs/new}" 
+                              method="post">
+                            
+                            <!-- 제목 -->
+                            <div class="mb-3">
+                                <label for="title" class="form-label">공고 제목 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="title" name="title"
+                                       th:value="${job.title}" 
+                                       placeholder="예: 백엔드 개발자 채용 (Java/Spring)" required>
+                            </div>
+
+                            <!-- 회사명 -->
+                            <div class="mb-3">
+                                <label for="companyName" class="form-label">회사명</label>
+                                <input type="text" class="form-control" id="companyName" name="companyName"
+                                       th:value="${job.companyName}"
+                                       placeholder="회사명을 입력하세요 (비공개 가능)">
+                            </div>
+
+                            <!-- 기술스택 -->
+                            <div class="mb-3">
+                                <label for="skills" class="form-label">요구 기술 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="skills" name="skills"
+                                       th:value="${job.skills}"
+                                       placeholder="예: Java, Spring Boot, JPA, MySQL (쉼표로 구분)" required>
+                            </div>
+
+                            <!-- 업무 내용 -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">업무 내용 <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="description" name="description" rows="5"
+                                          placeholder="담당하실 업무를 상세히 작성하세요..."
+                                          required th:text="${job.description}"></textarea>
+                            </div>
+
+                            <!-- 자격요건 -->
+                            <div class="mb-3">
+                                <label for="requirements" class="form-label">자격요건</label>
+                                <textarea class="form-control" id="requirements" name="requirements" rows="4"
+                                          placeholder="필수 자격요건을 작성하세요...&#10;예:&#10;- Java 3년 이상&#10;- Spring Framework 경험"
+                                          th:text="${job.requirements}"></textarea>
+                            </div>
+
+                            <hr>
+
+                            <!-- 근무지/근무형태 -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="location" class="form-label">근무지</label>
+                                    <input type="text" class="form-control" id="location" name="location"
+                                           th:value="${job.location}"
+                                           placeholder="예: 서울 강남구">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="workType" class="form-label">근무형태</label>
+                                    <select class="form-select" id="workType" name="workType">
+                                        <option value="">선택하세요</option>
+                                        <option value="ONSITE" th:selected="${job.workType == 'ONSITE'}">출근</option>
+                                        <option value="REMOTE" th:selected="${job.workType == 'REMOTE'}">원격근무</option>
+                                        <option value="HYBRID" th:selected="${job.workType == 'HYBRID'}">하이브리드</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 고용형태/급여 -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="employmentType" class="form-label">고용형태</label>
+                                    <select class="form-select" id="employmentType" name="employmentType">
+                                        <option value="">선택하세요</option>
+                                        <option value="FULL_TIME" th:selected="${job.employmentType == 'FULL_TIME'}">정규직</option>
+                                        <option value="CONTRACT" th:selected="${job.employmentType == 'CONTRACT'}">계약직</option>
+                                        <option value="FREELANCE" th:selected="${job.employmentType == 'FREELANCE'}">프리랜서</option>
+                                        <option value="PART_TIME" th:selected="${job.employmentType == 'PART_TIME'}">파트타임</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="salaryMin" class="form-label">최소 급여 (원)</label>
+                                    <input type="number" class="form-control" id="salaryMin" name="salaryMin"
+                                           th:value="${job.salaryMin}" placeholder="3000000">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="salaryMax" class="form-label">최대 급여 (원)</label>
+                                    <input type="number" class="form-control" id="salaryMax" name="salaryMax"
+                                           th:value="${job.salaryMax}" placeholder="5000000">
+                                </div>
+                            </div>
+
+                            <!-- 마감일 -->
+                            <div class="mb-3">
+                                <label for="deadline" class="form-label">마감일</label>
+                                <input type="date" class="form-control" id="deadline" name="deadline"
+                                       th:value="${job.deadline}">
+                            </div>
+
+                            <!-- 상태 (수정시) -->
+                            <div class="mb-4" th:if="${job.postingId != null}">
+                                <label for="status" class="form-label">공고 상태</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="OPEN" th:selected="${job.status == 'OPEN'}">모집중</option>
+                                    <option value="CLOSED" th:selected="${job.status == 'CLOSED'}">마감</option>
+                                </select>
+                            </div>
+
+                            <!-- 버튼 -->
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    <span th:text="${job.postingId != null} ? '수정하기' : '등록하기'">등록하기</span>
+                                </button>
+                                <a th:href="@{/jobs/my}" class="btn btn-outline-secondary">취소</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2025 DevMatch. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

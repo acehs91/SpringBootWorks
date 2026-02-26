@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.devmatch.mapper.MessageMapper">
+
+    <!-- 결과 매핑 -->
+    <resultMap id="messageMap" type="com.devmatch.dto.MessageDTO">
+        <id property="messageId" column="message_id"/>
+        <result property="senderId" column="sender_id"/>
+        <result property="receiverId" column="receiver_id"/>
+        <result property="applicationId" column="application_id"/>
+        <result property="content" column="content"/>
+        <result property="isRead" column="is_read"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="senderName" column="sender_name"/>
+        <result property="senderEmail" column="sender_email"/>
+        <result property="receiverName" column="receiver_name"/>
+        <result property="receiverEmail" column="receiver_email"/>
+    </resultMap>
+
+    <!-- 메시지 전송 -->
+    <insert id="insert" parameterType="com.devmatch.dto.MessageDTO">
+        INSERT INTO dm_message (
+            message_id, sender_id, receiver_id, application_id,
+            content, is_read, created_at
+        ) VALUES (
+            dm_message_seq.NEXTVAL, #{senderId}, #{receiverId}, #{applicationId},
+            #{content}, 'N', SYSDATE
+        )
+    </insert>
+
+    <!-- 단건 조회 -->
+    <select id="findById" parameterType="Long" resultMap="messageMap">
+        SELECT m.*,
+               s.name as sender_name, s.email as sender_email,
+               r.name as receiver_name, r.email as receiver_email
+        FROM dm_message m
+        JOIN dm_member s ON m.sender_id = s.member_id
+        JOIN dm_member r ON m.receiver_id = r.member_id
+        WHERE m.message_id = #{messageId}
+    </select>
+
+    <!-- 대화 목록 (최근 대화 상대별 마지막 메시지) -->
+    <select id="findConversations" parameterType="Long" resultMap="messageMap">
+        SELECT * FROM (
+            SELECT m.*,
+                   s.name as sender_name, s.email as sender_email,
+                   r.name as receiver_name, r.email as receiver_email,
+                   ROW_NUMBER() OVER (
+                       PARTITION BY CASE 
+                           WHEN m.sender_id = #{memberId} THEN m.receiver_id 
+                           ELSE m.sender_id 
+                       END 
+                       ORDER BY m.created_at DESC
+                   ) as rn
+            FROM dm_message m
+            JOIN dm_member s ON m.sender_id = s.member_id
+            JOIN dm_member r ON m.receiver_id = r.member_id
+            WHERE m.sender_id = #{memberId} OR m.receiver_id = #{memberId}
+        )
+        WHERE rn = 1
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 특정 상대와의 대화 내역 -->
+    <select id="findByPartner" resultMap="messageMap">
+        SELECT m.*,
+               s.name as sender_name, s.email as sender_email,
+               r.name as receiver_name, r.email as receiver_email
+        FROM dm_message m
+        JOIN dm_member s ON m.sender_id = s.member_id
+        JOIN dm_member r ON m.receiver_id = r.member_id
+        WHERE (m.sender_id = #{memberId} AND m.receiver_id = #{partnerId})
+           OR (m.sender_id = #{partnerId} AND m.receiver_id = #{memberId})
+        ORDER BY m.created_at ASC
+    </select>
+
+    <!-- 읽음 처리 (상대가 보낸 메시지를 읽음으로) -->
+    <update id="markAsRead">
+        UPDATE dm_message 
+        SET is_read = 'Y'
+        WHERE sender_id = #{partnerId} 
+          AND receiver_id = #{memberId}
+          AND is_read = 'N'
+    </update>
+
+    <!-- 안 읽은 메시지 수 -->
+    <select id="countUnread" parameterType="Long" resultType="int">
+        SELECT COUNT(*) FROM dm_message 
+        WHERE receiver_id = #{memberId} AND is_read = 'N'
+    </select>
+
+    <!-- 삭제 -->
+    <delete id="delete" parameterType="Long">
+        DELETE FROM dm_message WHERE message_id = #{messageId}
+    </delete>
+
+</mapper>

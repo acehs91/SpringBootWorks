@@ -1,0 +1,105 @@
+/* ===================================
+   MVP-DevMatch 기본 스타일
+   =================================== */
+
+/* 기본 설정 */
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 네비게이션 */
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+/* 카드 호버 효과 */
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+/* 버튼 */
+.btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* 폼 스타일 */
+.form-control {
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* 테이블 */
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+/* 뱃지 */
+.badge {
+    border-radius: 4px;
+    padding: 5px 10px;
+}
+
+/* 반응형 - 모바일 */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    .navbar-nav {
+        padding: 1rem 0;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 0.75rem 0;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+    
+    footer .row > div {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* 반응형 - 태블릿 */
+@media (max-width: 992px) and (min-width: 769px) {
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}

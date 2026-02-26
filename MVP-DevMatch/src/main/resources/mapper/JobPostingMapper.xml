@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.devmatch.mapper.JobPostingMapper">
+
+    <!-- 채용공고 등록 -->
+    <insert id="insertJobPosting" parameterType="JobPostingDTO">
+        <selectKey keyProperty="postingId" resultType="long" order="BEFORE">
+            SELECT dm_job_posting_seq.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO dm_job_posting (
+            posting_id, member_id, title, company_name, description,
+            requirements, skills, location, work_type, employment_type,
+            salary_min, salary_max, deadline, status, view_count,
+            created_at, updated_at
+        ) VALUES (
+            #{postingId}, #{memberId}, #{title}, #{companyName}, #{description},
+            #{requirements}, #{skills}, #{location}, #{workType}, #{employmentType},
+            #{salaryMin}, #{salaryMax}, #{deadline}, NVL(#{status}, 'OPEN'), 0,
+            SYSDATE, SYSDATE
+        )
+    </insert>
+
+    <!-- 채용공고 조회 (ID) -->
+    <select id="selectJobPostingById" resultType="JobPostingDTO">
+        SELECT 
+            j.posting_id, j.member_id, j.title, j.company_name, j.description,
+            j.requirements, j.skills, j.location, j.work_type, j.employment_type,
+            j.salary_min, j.salary_max, j.deadline, j.status, j.view_count,
+            j.created_at, j.updated_at,
+            m.name AS client_name,
+            (SELECT COUNT(*) FROM dm_application WHERE posting_id = j.posting_id) AS application_count
+        FROM dm_job_posting j
+        JOIN dm_member m ON j.member_id = m.member_id
+        WHERE j.posting_id = #{postingId}
+    </select>
+
+    <!-- 채용공고 목록 (의뢰인별) -->
+    <select id="selectJobPostingsByMemberId" resultType="JobPostingDTO">
+        SELECT 
+            j.posting_id, j.member_id, j.title, j.company_name, j.description,
+            j.requirements, j.skills, j.location, j.work_type, j.employment_type,
+            j.salary_min, j.salary_max, j.deadline, j.status, j.view_count,
+            j.created_at, j.updated_at,
+            (SELECT COUNT(*) FROM dm_application WHERE posting_id = j.posting_id) AS application_count
+        FROM dm_job_posting j
+        WHERE j.member_id = #{memberId}
+        ORDER BY j.created_at DESC
+    </select>
+
+    <!-- 채용공고 목록 (전체 공개) -->
+    <select id="selectOpenJobPostings" resultType="JobPostingDTO">
+        SELECT 
+            j.posting_id, j.member_id, j.title, j.company_name, j.description,
+            j.requirements, j.skills, j.location, j.work_type, j.employment_type,
+            j.salary_min, j.salary_max, j.deadline, j.status, j.view_count,
+            j.created_at, j.updated_at,
+            m.name AS client_name,
+            (SELECT COUNT(*) FROM dm_application WHERE posting_id = j.posting_id) AS application_count
+        FROM dm_job_posting j
+        JOIN dm_member m ON j.member_id = m.member_id
+        WHERE j.status = 'OPEN'
+        ORDER BY j.created_at DESC
+    </select>
+
+    <!-- 채용공고 검색 (기술스택) -->
+    <select id="searchJobPostingsBySkills" resultType="JobPostingDTO">
+        SELECT 
+            j.posting_id, j.member_id, j.title, j.company_name, j.description,
+            j.requirements, j.skills, j.location, j.work_type, j.employment_type,
+            j.salary_min, j.salary_max, j.deadline, j.status, j.view_count,
+            j.created_at, j.updated_at,
+            m.name AS client_name
+        FROM dm_job_posting j
+        JOIN dm_member m ON j.member_id = m.member_id
+        WHERE j.status = 'OPEN'
+          AND UPPER(j.skills) LIKE '%' || UPPER(#{skills}) || '%'
+        ORDER BY j.created_at DESC
+    </select>
+
+    <!-- 채용공고 검색 (키워드) -->
+    <select id="searchJobPostings" resultType="JobPostingDTO">
+        SELECT 
+            j.posting_id, j.member_id, j.title, j.company_name, j.description,
+            j.requirements, j.skills, j.location, j.work_type, j.employment_type,
+            j.salary_min, j.salary_max, j.deadline, j.status, j.view_count,
+            j.created_at, j.updated_at,
+            m.name AS client_name
+        FROM dm_job_posting j
+        JOIN dm_member m ON j.member_id = m.member_id
+        WHERE j.status = 'OPEN'
+          AND (
+              UPPER(j.title) LIKE '%' || UPPER(#{keyword}) || '%'
+              OR UPPER(j.skills) LIKE '%' || UPPER(#{keyword}) || '%'
+              OR UPPER(j.company_name) LIKE '%' || UPPER(#{keyword}) || '%'
+              OR UPPER(j.description) LIKE '%' || UPPER(#{keyword}) || '%'
+          )
+        ORDER BY j.created_at DESC
+    </select>
+
+    <!-- 채용공고 수정 -->
+    <update id="updateJobPosting" parameterType="JobPostingDTO">
+        UPDATE dm_job_posting SET
+            title = #{title},
+            company_name = #{companyName},
+            description = #{description},
+            requirements = #{requirements},
+            skills = #{skills},
+            location = #{location},
+            work_type = #{workType},
+            employment_type = #{employmentType},
+            salary_min = #{salaryMin},
+            salary_max = #{salaryMax},
+            deadline = #{deadline},
+            status = #{status},
+            updated_at = SYSDATE
+        WHERE posting_id = #{postingId}
+    </update>
+
+    <!-- 채용공고 상태 변경 -->
+    <update id="updateJobPostingStatus">
+        UPDATE dm_job_posting SET
+            status = #{status},
+            updated_at = SYSDATE
+        WHERE posting_id = #{postingId}
+    </update>
+
+    <!-- 채용공고 삭제 -->
+    <delete id="deleteJobPosting">
+        DELETE FROM dm_job_posting WHERE posting_id = #{postingId}
+    </delete>
+
+    <!-- 조회수 증가 -->
+    <update id="incrementViewCount">
+        UPDATE dm_job_posting SET view_count = view_count + 1
+        WHERE posting_id = #{postingId}
+    </update>
+
+    <!-- 채용공고 개수 (의뢰인별) -->
+    <select id="countByMemberId" resultType="int">
+        SELECT COUNT(*) FROM dm_job_posting WHERE member_id = #{memberId}
+    </select>
+
+</mapper>
